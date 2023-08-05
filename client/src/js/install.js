@@ -1,25 +1,21 @@
 const butInstall = document.getElementById('buttonInstall');
 
-// Logic for installing the PWA
-let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (event) => {
-  event.preventDefault();
-  deferredPrompt = event;
+    window.defferedPrompt = event;
+    butInstall.removeAttribute('hidden', false);
 });
 
 butInstall.addEventListener('click', async () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    const choiceResult = await deferredPrompt.userChoice;
-    if (choiceResult.outcome === 'accepted') {
-      console.log('User accepted the install prompt.');
-    } else {
-      console.log('User dismissed the install prompt.');
-    }
-    deferredPrompt = null;
-  }
+    const promptEvent = window.defferedPrompt;
+    if (!promptEvent) return;
+
+    promptEvent.prompt();
+
+    window.defferedPrompt = null;
+
+    butInstall.setAttribute('hidden', true);
 });
 
 window.addEventListener('appinstalled', (event) => {
-  console.log('App was successfully installed.', event);
+    console.log('Jate was installed.', event);
 });
